@@ -83,11 +83,15 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": env.db(
+        "DATABASE_URL",
+        engine="django.db.backends.mysql",
+    ),
+    "TEST": {"NAME": "private_test_db", "CHARSET": "utf8mb4", "COLLATION": "utf8mb4_general_ci"},
 }
+
+# Set the character set
+DATABASES["default"]["OPTIONS"] = {"init_command": "SET sql_mode='STRICT_TRANS_TABLES'", "charset": env("charset")}
 
 
 # Password validation
