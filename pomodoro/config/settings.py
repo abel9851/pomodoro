@@ -42,7 +42,12 @@ SYSTEM_APPS = [
 
 CUSTOM_APPS = ["users.apps.UsersConfig"]
 
-THIRD_PARTY_APPS = ["rest_framework", "rest_framework_simplejwt", "django_extensions"]
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "django_extensions",
+    "rest_framework_simplejwt.token_blacklist",
+]
 
 
 INSTALLED_APPS = SYSTEM_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
