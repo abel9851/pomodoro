@@ -1,10 +1,6 @@
-import json
-
-from django.contrib.auth.hashers import make_password
 from django.urls import reverse
-from rest_framework.test import APIClient, APITestCase
+from rest_framework.test import APITestCase
 
-from ..views import UserApiLogin, UserApiLogout
 from .factories import UserFactory
 
 # userFactory 수정필요하다.
