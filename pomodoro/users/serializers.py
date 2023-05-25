@@ -1,13 +1,11 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import update_last_login
 from rest_framework import exceptions, serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class UserLoginTokenObtainPairSerializer(serializers.Serializer):
-
     username_field = get_user_model().USERNAME_FIELD
 
     def __init__(self, *args, **kwargs):

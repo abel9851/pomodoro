@@ -8,3 +8,6 @@ class User(AbstractUser):
     # profile_image =
     first_name = models.CharField(max_length=150, editable=False)
     last_name = models.CharField(max_length=150, editable=False)
+
+    def __str__(self):
+        return self.username

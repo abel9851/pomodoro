@@ -13,16 +13,19 @@ class UserApiLogin(APIView):
     # genericAPIView가 뭔지 조사하기 exception자동으로 걸러주는지 확인할것.
     # 로그인 자체는 session login이 필요하다. 왜냐하면 JWT Authentication을 하면
     # username, password와 같은 credential이 아닌, token을 날려야하기 때문.
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    authentication_classes = []
+    permission_classes = []
     # AllowAny를 해놓으면 authentication을 어떻게 해놓던간에 그 api에 request를 제한없이 날릴수 있다.
     # authentication_classes를 지정하면 그 api는 식별을 authentication_class에 있는 방식으로 식별한다.
     # 그 다음 permission_classes에 IsAutenticated를 하면 request.user의 is_authenticated 메소드가 True인지 확인한다.
     # False면 그 api는 사용할 수 없다.
     # 반면에 permission_class에 AllowAny를 해놓는다면 인증이 세션인증인지 JWT인증인지, is_authtenticated가 true인지 False인지 전혀 신경쓰지않는다.
     # 즉, 자유롭게 request를 할 수 있다.
-
-    # 3/6에 authentication 문서 읽기
+    # 추기
+    # simple jwt로 로그인할 때에는 authentication_class와 permission 클래스를 지정하지 않는다.
+    # serializer에서 authenticate를 사용하기 때문이다.
+    # 그리고 지정했을 경우, 테스트 코드에서는 미들웨어를 사용하지 않기 때문에
+    # is_authenticated가 False가 되어 403 에러가 뜬다.
 
     """simple jwt를 사용해서 커스텀한 login view"""
 
@@ -46,7 +49,6 @@ class UserApiLogout(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-
         serializer = UserLogoutSerializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
