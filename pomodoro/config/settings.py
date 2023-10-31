@@ -47,6 +47,7 @@ THIRD_PARTY_APPS = [
     "rest_framework_simplejwt",
     "django_extensions",
     "rest_framework_simplejwt.token_blacklist",
+    "debug_toolbar",
 ]
 
 
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -91,11 +93,18 @@ DATABASES = {
         "DATABASE_URL",
         engine="django.db.backends.mysql",
     ),
-    "TEST": {"NAME": "private_test_db", "CHARSET": "utf8mb4", "COLLATION": "utf8mb4_general_ci"},
+    "TEST": {
+        "NAME": "private_test_db",
+        "CHARSET": "utf8mb4",
+        "COLLATION": "utf8mb4_general_ci",
+    },
 }
 
 # Set the character set
-DATABASES["default"]["OPTIONS"] = {"init_command": "SET sql_mode='STRICT_TRANS_TABLES'", "charset": env("charset")}
+DATABASES["default"]["OPTIONS"] = {
+    "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+    "charset": env("charset"),
+}
 
 
 # Password validation
@@ -143,10 +152,15 @@ AUTH_USER_MODEL = "users.User"
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.SessionAuthentication", "rest_framework_simplejwt.authentication.JWTAuthentication"],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
     "DEFALUT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
 }
 
 SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "users.serializers.UserLoginTokenObtainPairSerializer",
 }
+
+INTERNAL_IPS = ["127.0.0.1"]
