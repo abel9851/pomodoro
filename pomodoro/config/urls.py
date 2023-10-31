@@ -22,4 +22,5 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     path("api/v1/users/", include("users.urls")),
     path("api/token/refresh", TokenRefreshView.as_view(), name="token_refresh"),
+    path("__debug__", include("debug_toolbar.urls")),
 ]
