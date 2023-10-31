@@ -1,8 +1,9 @@
-from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.models import update_last_login
 from rest_framework import exceptions, serializers
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.models import update_last_login
 
 
 class UserLoginTokenObtainPairSerializer(serializers.Serializer):
@@ -12,12 +13,17 @@ class UserLoginTokenObtainPairSerializer(serializers.Serializer):
         super().__init__(*args, **kwargs)
 
         self.fields[self.username_field] = serializers.CharField()
-        self.fields["password"] = serializers.CharField(style={"input_type": "passowrd"}, write_only=True)
+        self.fields["password"] = serializers.CharField(
+            style={"input_type": "passowrd"}, write_only=True
+        )
 
     def validate(self, attrs):
         # TODO 유저 로그인이 여러번 실패했을 경우에 처리 하는 기능 추가
         # authenticate 처리 확인하기 노마드코더
-        authenticate_kwargs = {self.username_field: attrs[self.username_field], "password": attrs["password"]}
+        authenticate_kwargs = {
+            self.username_field: attrs[self.username_field],
+            "password": attrs["password"],
+        }
 
         user = authenticate(**authenticate_kwargs)
 
