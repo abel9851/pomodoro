@@ -3,6 +3,8 @@ from django.db import models
 
 
 class Task(core_models.TimeStampedModel):
+    """Task Model Definition"""
+
     user = models.ForeignKey(
         "users.User",
         verbose_name="releated user",
