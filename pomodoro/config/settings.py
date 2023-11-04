@@ -40,7 +40,12 @@ SYSTEM_APPS = [
     "django.contrib.staticfiles",
 ]
 
-CUSTOM_APPS = ["users.apps.UsersConfig"]
+CUSTOM_APPS = [
+    "core.apps.CoreConfig",
+    "api.apps.ApiConfig",
+    "users.apps.UsersConfig",
+    "tasks.apps.TasksConfig",
+]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
