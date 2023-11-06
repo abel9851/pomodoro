@@ -44,7 +44,9 @@ CUSTOM_APPS = [
     "core.apps.CoreConfig",
     "api.apps.ApiConfig",
     "users.apps.UsersConfig",
+    "projects.apps.ProjectsConfig",
     "tasks.apps.TasksConfig",
+    "pomodoros.apps.PomodorosConfig",
 ]
 
 THIRD_PARTY_APPS = [
