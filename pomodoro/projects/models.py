@@ -27,8 +27,8 @@ class Project(core_models.TimeStampedModel):
 
 class ProjectTaskAssociation(core_models.TimeStampedModel):
     project = models.ForeignKey(
-        "Project", related_name="project_task_association", on_delete=models.CASCADE
+        "Project", related_name="task_association", on_delete=models.CASCADE
     )
     task = models.ForeignKey(
-        "tasks.Task", related_name="project_task_association", on_delete=models.CASCADE
+        "tasks.Task", related_name="project_association", on_delete=models.CASCADE
     )
