@@ -19,7 +19,9 @@ class Task(core_models.TimeStampedModel):
         verbose_name="task memo", max_length=300, default="", blank=True
     )
     # TODO: db에 저장되는 건 integer, client에 표시되는 것은 글자가 표시되도록 하기. -> frontend에서 직접 작성해야한다.
-    priority = models.IntegerField(choices=Priority.choices, default=Priority.MEDIUM)
-    due_date = models.DateField(default=date.today)
+    priority = models.IntegerField(
+        verbose_name="task priority", choices=Priority.choices, default=Priority.MEDIUM
+    )
+    due_date = models.DateField(verbose_name="task due date", default=date.today)
 
     # TODO: repeat 기능 추가
