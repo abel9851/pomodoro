@@ -3,13 +3,29 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import ProjectListSerializer
-
+from .models import Project
+from .serializers import ProjectCreateSerializer, ProjectListSerializer
 
 # TODO: test 필요.
+# projects 모델 취득 - filter request.user의 id
+# permission과 authentication은 default를 사용
+# ProjectListSerializer를 사용해서 직렬화
+# Response로 반환
+# 사용해야 할 것은, only 메소드
+
+
 class ProjectListView(APIView):
+    """Project List View"""
+
+    def get(self, request):
+        projects = Project.objects.filter(user=request.user).only(
+            "name", "description", "color", "is_active"
+        )
+        serializer = ProjectListSerializer(projects, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def post(self, request):
-        serializer = ProjectListSerializer(request.data)
+        serializer = ProjectCreateSerializer(data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
