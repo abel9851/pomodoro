@@ -4,6 +4,11 @@ from django.db import models
 
 
 class Project(core_models.TimeStampedModel):
+    """Project Model Definition"""
+
+    class Meta:
+        db_table = "projects"
+
     name = models.CharField(verbose_name="project name", max_length=200)
     user = models.ForeignKey(
         "users.User",
@@ -27,6 +32,11 @@ class Project(core_models.TimeStampedModel):
 
 
 class ProjectTaskAssociation(core_models.TimeStampedModel):
+    """Project Task Association Model Definition"""
+
+    class Meta:
+        db_table = "project_task_associations"
+
     project = models.ForeignKey(
         "Project",
         verbose_name="related project",

@@ -9,6 +9,9 @@ from django.utils.translation import gettext_lazy as _
 class Task(core_models.TimeStampedModel):
     """Task Model Definition"""
 
+    class Meta:
+        db_table = "tasks"
+
     class Priority(models.IntegerChoices):
         HIGH = 0, _("HIGH")
         MEDIUM = 1, _("MEDIUM")
