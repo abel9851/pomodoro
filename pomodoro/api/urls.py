@@ -5,5 +5,4 @@ app_name = "api"
 urlpatterns = [
     path("users/", include("users.urls", namespace="users")),
     path("projects/", include("projects.urls", namespace="projects")),
-    path("tasks/", include("tasks.urls", namespace="tasks")),
 ]
