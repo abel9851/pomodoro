@@ -4,7 +4,7 @@ from .models import Project
 
 
 class ProjectListSerializer(serializers.ModelSerializer):
-    """Projec"""
+    """Project List Model Serializer"""
 
     class Meta:
         model = Project
@@ -12,6 +12,8 @@ class ProjectListSerializer(serializers.ModelSerializer):
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
+    """Project Create Model Serializer"""
+
     class Meta:
         model = Project
         fields = ["name", "description", "color", "is_active"]
