@@ -1,5 +1,6 @@
 from core import models as core_models
 
+from django.conf import settings
 from django.db import models
 
 
@@ -10,8 +11,9 @@ class Project(core_models.TimeStampedModel):
         db_table = "projects"
 
     name = models.CharField(verbose_name="project name", max_length=200)
+    # TODO: django doc
     user = models.ForeignKey(
-        "users.User",
+        settings.AUTH_USER_MODEL,
         verbose_name="related user",
         related_name="projects",
         on_delete=models.CASCADE,
