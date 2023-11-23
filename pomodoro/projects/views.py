@@ -35,7 +35,7 @@ class ProjectListView(APIView):
 
         serializer.save(user=request.user)
 
-        return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 # TODO: projects List View를 생성한 뒤 기능 구현 할 것. 231121부터 할 것.
