@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -58,15 +59,18 @@ class TaskListView(APIView):
         # validate를 통과하지 못할 시의 커스텀 response를 정의하지 않는다면
         # 옵션 설정 하나로 변하게 코드를 작성할 수 있다.
         serializer.is_valid(raise_exception=True)
-        validated_data = serializer.validated_data
         # data는 name과 pomodoro_count다. pomodoro_count는 Task에 필요없는 데이터인데
         # 이 경우에는 어떻게 처리될까?
         # TypeError unexpected keyword arguments 'pomodoro_count'가 나온다.
         # 그러므로 pop을 해줘서 pomodoro_count는 별도로 취득한다.
-        pomodoro_count = serializer.validated_data.pop("pomodoro_count")
         with transaction.atomic():
             # TODO: projects에 정의되어잇는 ManyToMany를 여기에 정의해서 처리하도록 한다.
-            serializer.save()
-        # TODO: 생성된 Task과 Pomodoro의 데이터를 response에 받을 수 있도록 한다.
+            try:
+                project = Project.objects.get(id=pk)
+            except Project.DoesNotExist:
+                raise NotFound(detail="Project Not Found")
+            task = serializer.save()
+            project.tasks.add(task)
 
-        return Response(status=status.HTTP_201_CREATED)
+        # TODO: 생성된 Task과 Pomodoro의 데이터를 response에 받을 수 있도록
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
