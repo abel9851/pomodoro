@@ -1,3 +1,4 @@
+from api_utils.common import get_model_model_instance_by_pk_or_not_found
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 from rest_framework.generics import ListAPIView
@@ -44,7 +45,7 @@ class ProjectListView(APIView):
 # TODO: 231122에 마저 구현. pomodoro에 대해서는 client에서 받은 pomodoro_count를 사용해서 bulk_create가 되는지
 # 확인한후, 그리고 save가 아니니까 add_auto_now가 제대로 작동안할수 있으니 이부분 조사하고 해결해서 구현하기
 # pomodoro를 생성할 때에는 time length는 default값을 지정해서 처리하기
-# TODO: 나중에 pomodoro의 default값을 저장하는 table을 따로 만들어서 참조해서 생성하도록 수정하기
+# TODO: 나중에 pomodoro의 default값을 저장하는 table을 따로 만들어서 참조해서 생성하도록 수정하
 class TaskListView(APIView):
     def post(self, request, pk):
         # request.data를 serializer로 검증
@@ -63,14 +64,12 @@ class TaskListView(APIView):
         # 이 경우에는 어떻게 처리될까?
         # TypeError unexpected keyword arguments 'pomodoro_count'가 나온다.
         # 그러므로 pop을 해줘서 pomodoro_count는 별도로 취득한다.
+        # TODO: projects에 정의되어잇는 ManyToMany를 여기에 정의해서 처리하도록 한다.
+        project = get_model_model_instance_by_pk_or_not_found(pk=pk, model=Project)
+
         with transaction.atomic():
-            # TODO: projects에 정의되어잇는 ManyToMany를 여기에 정의해서 처리하도록 한다.
-            try:
-                project = Project.objects.get(id=pk)
-            except Project.DoesNotExist:
-                raise NotFound(detail="Project Not Found")
             task = serializer.save()
             project.tasks.add(task)
 
-        # TODO: 생성된 Task과 Pomodoro의 데이터를 response에 받을 수 있도록
+        # TODO: 생성된 Task과 Pomodoro의 데이터를 response에 받을 수 있도록 231126예정
         return Response(serializer.data, status=status.HTTP_201_CREATED)
