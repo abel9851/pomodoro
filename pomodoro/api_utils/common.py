@@ -14,6 +14,6 @@ def get_model_model_instance_by_pk_or_not_found(model: Type[Model], pk: int) -> 
         instance = model.objects.get(pk=pk)
 
     except model.DoesNotExist:
-        raise NotFound()
+        raise NotFound(f"{model.__name__} with pk {pk} not found")
 
     return instance
