@@ -1,5 +1,5 @@
 from api.permissions import IsAuthenticatedAndIsObjectOwner
-from api_utils.common import get_model_model_instance_by_pk_or_not_found
+from api_utils.common import get_model_instance_by_pk_or_not_found
 from django.db import transaction
 from rest_framework import status
 from rest_framework.generics import ListAPIView
@@ -57,7 +57,7 @@ class TaskListView(APIView):
         # 유저 검증. 해당 Project 모델을 소유한 유저인지 확인해야한다고 생각한다.
         # TODO: 이 부분을 permission class로 해결 가능할 듯 싶다.
         # 231209 해결완료
-        project = get_model_model_instance_by_pk_or_not_found(pk=pk, model=Project)
+        project = get_model_instance_by_pk_or_not_found(pk=pk, model=Project)
         self.check_object_permissions(request, project)
 
         serializer = TaskPomodoroCreateSerializer(data=request.data)
@@ -82,7 +82,10 @@ class TaskListView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     # TODO: 231209부터 아래의 작업하기
-    # Project모델 인스턴스을 가리키는 Task모델 인스턴스를 get한다.
+    # Project모델 인스턴스을 가리키는 Task모델 인스턴스들을 get한다.
+    # get을 할 때에는 무조건 pomodoro_count를 serializer에서 반환할까 생각했는데
+    # get을 할때에는 pomodoro의 이름과 pomodoro_count만 가져오기 때문에 가볍게 하기 위해
+    # Task모델에 자체적으로 pomodoro_count를 갖을 것
     # query string으로 데이터를 받는다.
     # query string의 데이터로 내부에서 get하 데이터를 조회하고 파이썬 객체로 가져온다.
     # response한다.
@@ -92,3 +95,20 @@ class TaskListView(APIView):
     # response 200 및 데이터 return
     # def get(self, request, pk):
     #     pass
+
+
+# TODO: Task put(외래키관계인 pomodoro의 증감), delete, get
+# put에 관해서는 Task 자체의 정보의 수정과 Task과 연관된 pomodoro의 증감이 가능하게 할 것
+# Task 정보를 수정하는데 쿼리 1개, 프론트로부터 Task의 편집화면에서 개수를 조절할 수 있는 업 앤 다운 버튼이 있고
+# 늘어나면 새로운 pomodoro를 추가, 줄면 맨 마지막 추가했던 pomodoro를 삭제하도록 하자.
+# pomodoro를 개별 조작 및 삭제 할 의도가 없었다면, pomodoro 모델을 만들 필요도 없이
+# Task에서 pomodoro모델에 저장한 시간과, 포모도로 개수를 Task 모델에 전부 저장하고
+# pomodoro count 컬럼을 추가하고, 거기에 개수를 저장해서 pomodoro를 프론트에서 생성했었으면 됬었다.
+# 하지만 pomodoro를 개별 조작하는게 이번에 하고 싶은 기능이기 때문에 유지하되
+# TaskDetailView
+class TaskDetailView(APIView):
+    def put(self, request, pk):
+        pass
+
+
+# TODO: pomodoro 하나하나 get, put, delete - 나중에 구현되는 것들.
