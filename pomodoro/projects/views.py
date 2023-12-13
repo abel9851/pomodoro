@@ -45,6 +45,16 @@ class ProjectListView(APIView):
 # 확인한후, 그리고 save가 아니니까 add_auto_now가 제대로 작동안할수 있으니 이부분 조사하고 해결해서 구현하기
 # pomodoro를 생성할 때에는 time length는 default값을 지정해서 처리하기
 # TODO: 나중에 pomodoro의 default값을 저장하는 table을 따로 만들어서 참조해서 생성하도록 수정하기
+# TODO: 12/12 custom permission class는 관둔다. object레벨에서 permission 체크가 행해질 경우
+# response가 호출될 때 obj가 view 안에서 제어하기가 힘들다.
+# common_api_util과 같은 함수로 처리하도록 하자.
+# get_model_instance_by_pk_or_not_found와 느슨하게 결합해서 처리하는 방향으로 하자.
+# github에서 permission_classes로 검색해서 모델 권한 제어를 어떻게 하는지 보는 것도 좋겠다.
+# 수상한건 코드를 수정하기 전에는 커스텀 퍼미션 클래스가 제대로 움직였다는 것이다.
+# merge이전, 12/11이전 코드로 테스트 해보자.
+# 테스트 완료. DRF가 제공하는 browsable api문제였다.
+
+
 class TaskListView(APIView):
     permission_classes = [IsAuthenticatedAndIsObjectOwner]
 

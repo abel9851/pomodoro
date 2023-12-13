@@ -1,7 +1,6 @@
 from datetime import date
 
 from core import models as core_models
-
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -26,5 +25,10 @@ class Task(core_models.TimeStampedModel):
         verbose_name="task priority", choices=Priority.choices, default=Priority.MEDIUM
     )
     due_date = models.DateField(verbose_name="task due date", default=date.today)
+    # integerfield에서는 max_length가 무시된다. Min or MaxValueValidator를 사용하던가
+    # serializer에서 체크하는게 좋다.
+    pomodoro_count = models.IntegerField(verbose_name="task pomodoro count", default=1)
 
+    # TODO: is_completed 추가. 프론트에서 is_completed를 누르면 True로 되고, Project는 complete로 변경.
+    # TODO: is_completed가 True가 된 날짜 추가.
     # TODO: repeat 기능 추가
