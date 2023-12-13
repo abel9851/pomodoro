@@ -20,10 +20,11 @@ class TaskPomodoroCreateSerializer(serializers.ModelSerializer):
     # class Meta에 지정하는 field는 옵션관계 없이 모두 포함시켜야 한다.
     class Meta:
         model = Task
-        fields = ["id", "name", "pomodoro_count", "pomodoros"]
+        fields = ["id", "name", "priority", "due_date", "pomodoro_count", "pomodoros"]
 
     def create(self, validated_data):
         pomodoro_count = validated_data.get("pomodoro_count")
+        # pomodoro_count = validated_data.pop("pomodoro_count")
         task = Task.objects.create(**validated_data)
         pomodoros = [Pomodoro(task=task) for _ in range(pomodoro_count)]
         Pomodoro.objects.bulk_create(pomodoros)
