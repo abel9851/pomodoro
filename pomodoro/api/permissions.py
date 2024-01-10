@@ -11,7 +11,7 @@ class IsAuthenticatedAndIsObjectOwner(IsAuthenticated):
     rest_framework/renderers.py 532 line에서 obj에 serializer의
     model 인스턴스를 할당하기 때문에 엉뚱한 obj를 사용하게 될 위험이 있다.
 
-    DRF가 제공하는 browsabler api로 api request를 할 경우, has_obj_permission이
+    DRF가 제공하는 browsable api로 api request를 할 경우, has_obj_permission이
     2번 호출되고, 각각의 호출에서 사용되는 obj가 다르다.
     view에서 정의한 model serializer가 있을 경우, 그 serializer의 모델 인스턴스가
     obj에 할당되고 그 obj에 user attr가 없다면 에러가 발생하니까 주의해야한다.
