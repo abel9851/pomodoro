@@ -1,5 +1,6 @@
 from pomodoros.models import Pomodoro
 from pomodoros.serializers import PomodoroCreateSerializer
+from projects.serializers import ProjectBasicInfoSerializer
 from rest_framework import serializers
 
 from .models import Task
@@ -34,14 +35,13 @@ class TaskPomodoroCreateSerializer(serializers.ModelSerializer):
 
 class TaskDetailSerializer(serializers.ModelSerializer):
     """Task Detail Serializer"""
+    
+    # pomodoro는 task detail을 get한 뒤.
+    # 유저가 pomodoro_count부분을 누르면
+    # task의 id를 사용해서 별도로 pomodoro list(pomodoro의 상세내용 포함)을 get하는 api를 사용할 것이므로
+    # 여기에는 포함시키지 않는다.
+    projects = ProjectBasicInfoSerializer(read_only=True)
 
     class Meta:
         model = Task
-        fields = []
-
-
-# class TaskListSerializer(serializers.ModelSerializer):
-#     # get해야하는 데이터: Task 이름, project이름, pomodoro 갯수
-#     class Meta:
-#         model = Task
-#         field = ["name", ]
+        fields = ["id", "due_date", "pomodoro_count", "projects"]

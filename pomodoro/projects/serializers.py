@@ -17,3 +17,15 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ["name", "description", "color", "is_active"]
+
+
+# TODO: 10/12 TaskDetailSerializer에 nested serializer인
+# rojectDetailSerializer에는 field가 id와 name만 필요하므로
+# ProjectDetailSerializer라는 이름이 적절하지 않다고 생각한다.
+# 이름을 변경하자.
+class ProjectBasicInfoSerializer(serializers.ModelSerializer):
+    """Project Detail Model Serializer"""
+
+    class Meta:
+        model = Project
+        fields = ["id", "name"]
