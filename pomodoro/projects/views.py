@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from tasks.serializers import TaskPomodoroCreateSerializer
+from tasks.serializers import TaskPomodoroCreateSerializer, TaskDetailSerializer
 
 from .models import Project
 from tasks.models import Task
@@ -95,6 +95,14 @@ class TaskListView(APIView):
         # 해결
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    # 호출했을 때 가져올 데이터 형식은
+    # Task의 이름, pomodoro의 개수(Task에 정의되어 있음), updated된 날짜.
+    # Pomodoro의 length(분). 왜냐하면 포모도로 화면에서 Task에 붙어있는 시작 버튼을 누르면
+    # Pomodoro의 length를 가져와서 타이머를 돌리기 때문이다.
+    # 기존의 serializer를 활용하기. 활용하게 된다면 serializer의 이름에서 create를 삭제하기
+    def get(self, request, project_pk):
+        pass
+
     # TODO: 231209부터 아래의 작업하기
     # Project모델 인스턴스을 가리키는 Task모델 인스턴스들을 get한다.
     # get을 할 때에는 무조건 pomodoro_count를 serializer에서 반환할까 생각했는데
@@ -120,18 +128,24 @@ class TaskListView(APIView):
 # pomodoro count 컬럼을 추가하고, 거기에 개수를 저장해서 pomodoro를 프론트에서 생성했었으면 됬었다.
 # 하지만 pomodoro를 개별 조작하는게 이번에 하고 싶은 기능이기 때문에 유지하되
 # TaskDetailView
+# TODO: 01/12에 api 호출 테스트하기, TaskDetail에는 project의 pk가 필요 없으므로
+# view의 위치를 task app으로 옮기기
 class TaskDetailView(APIView):
     permission_classes = [IsAuthenticatedAndIsObjectOwner]
-    
+
     def get(self, request, project_pk, task_pk):
         # 해당 task를 소유한 유저인지 확인
         task = get_model_instance_by_pk_or_not_found(pk=task_pk, model=Task)
-        task = task.objects.prefetch_related("projects")
+        task = task.objects.select_related("project")
 
-        return 
-        
+        # serializer 필요: projects의 model serializer을 TaskDetailSerializer에 nested serializer로 정의
+        serializer = TaskDetailSerializer(task)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
         # 해당 task를 취득
-        
+
         # 해당 task를 직렬화
 
     def put(self, request, project_pk, task_pk):
