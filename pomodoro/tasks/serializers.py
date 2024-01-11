@@ -32,6 +32,14 @@ class TaskPomodoroCreateSerializer(serializers.ModelSerializer):
         return task
 
 
+class TaskDetailSerializer(serializers.ModelSerializer):
+    """Task Detail Serializer"""
+
+    class Meta:
+        model = Task
+        fields = []
+
+
 # class TaskListSerializer(serializers.ModelSerializer):
 #     # get해야하는 데이터: Task 이름, project이름, pomodoro 갯수
 #     class Meta:

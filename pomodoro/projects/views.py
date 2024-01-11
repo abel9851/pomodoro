@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from tasks.serializers import TaskPomodoroCreateSerializer
 
 from .models import Project
+from tasks.models import Task
 from .serializers import ProjectCreateSerializer, ProjectListSerializer
 
 # TODO: test 필요.
@@ -58,7 +59,7 @@ class ProjectListView(APIView):
 class TaskListView(APIView):
     permission_classes = [IsAuthenticatedAndIsObjectOwner]
 
-    def post(self, request, pk):
+    def post(self, request, project_pk):
         # request.data를 serializer로 검증
         # 검증된 데이터로 Task 생성
         # task가 속한 project를 확인 - project의 id를 url로 받아야한다.
@@ -67,9 +68,12 @@ class TaskListView(APIView):
         # 유저 검증. 해당 Project 모델을 소유한 유저인지 확인해야한다고 생각한다.
         # TODO: 이 부분을 permission class로 해결 가능할 듯 싶다.
         # 231209 해결완료
-        project = get_model_instance_by_pk_or_not_found(pk=pk, model=Project)
+        project = get_model_instance_by_pk_or_not_found(pk=project_pk, model=Project)
+        # 240110 복습. generic view에서는 자동으로 호출되지만, APIView에서는 직접 호출해야한다.
+        # generic view는 나중에 사용해보자.
         self.check_object_permissions(request, project)
 
+        # TODO: projects와 tasks는 foreign key로 변경하기
         serializer = TaskPomodoroCreateSerializer(data=request.data)
 
         # raise_exception은
@@ -117,8 +121,23 @@ class TaskListView(APIView):
 # 하지만 pomodoro를 개별 조작하는게 이번에 하고 싶은 기능이기 때문에 유지하되
 # TaskDetailView
 class TaskDetailView(APIView):
-    def put(self, request, pk):
+    permission_classes = [IsAuthenticatedAndIsObjectOwner]
+    
+    def get(self, request, project_pk, task_pk):
+        # 해당 task를 소유한 유저인지 확인
+        task = get_model_instance_by_pk_or_not_found(pk=task_pk, model=Task)
+        task = task.objects.prefetch_related("projects")
+
+        return 
+        
+        # 해당 task를 취득
+        
+        # 해당 task를 직렬화
+
+    def put(self, request, project_pk, task_pk):
         pass
 
+    def delete(self, request, project_pk, task_pk):
+        pass
 
 # TODO: pomodoro 하나하나 get, put, delete - 나중에 구현되는 것들.

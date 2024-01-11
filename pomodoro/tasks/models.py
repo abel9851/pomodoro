@@ -24,6 +24,12 @@ class Task(core_models.TimeStampedModel):
     priority = models.IntegerField(
         verbose_name="task priority", choices=Priority.choices, default=Priority.MEDIUM
     )
+    project = models.ForeignKey(
+        "projects.Project",
+        verbose_name="related project",
+        related_name="tasks",
+        on_delete=models.CASCADE,
+    )
     due_date = models.DateField(verbose_name="task due date", default=date.today)
     # integerfield에서는 max_length가 무시된다. Min or MaxValueValidator를 사용하던가
     # serializer에서 체크하는게 좋다.
