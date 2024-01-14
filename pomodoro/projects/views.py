@@ -23,7 +23,7 @@ class ProjectListView(APIView):
     """Project List View"""
 
     def get(self, request):
-        projects = Project.objects.filter(user=request.user).only(
+        projects = Project.objects.filter(user=request.user.id).only(
             "name", "description", "color", "is_active"
         )
         serializer = ProjectListSerializer(projects, many=True)
