@@ -55,6 +55,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "rest_framework_simplejwt.token_blacklist",
     "debug_toolbar",
+    "drf_spectacular",
 ]
 
 
@@ -165,6 +166,14 @@ REST_FRAMEWORK = {
     ],
     "DEFALUT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "EXCEPTION_HANDLER": "rest_framework.views.exception_handler",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'pomoodoro API',
+    'DESCRIPTION': 'pomodoro api server',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 SIMPLE_JWT = {
