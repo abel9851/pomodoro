@@ -14,7 +14,7 @@ class UserLoginTokenObtainPairSerializer(serializers.Serializer):
 
         self.fields[self.username_field] = serializers.CharField()
         self.fields["password"] = serializers.CharField(
-            style={"input_type": "passowrd"}, write_only=True
+            style={"input_type": "password"}, write_only=True
         )
 
     def validate(self, attrs):
