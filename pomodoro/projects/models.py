@@ -24,4 +24,5 @@ class Project(core_models.TimeStampedModel):
     color = models.CharField(
         verbose_name="color code", max_length=150, default="#0067c0"
     )
-    is_active = models.BooleanField(verbose_name="project 활성화 여부")
+    # TODO: 2401027 필요성 확인
+    is_active = models.BooleanField(verbose_name="project 활성화 여부", default=True)
