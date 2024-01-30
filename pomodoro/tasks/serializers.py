@@ -24,9 +24,9 @@ class TaskPomodoroCreateSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "priority", "due_date", "pomodoro_count", "pomodoros"]
 
     def create(self, validated_data):
-        pomodoro_count = validated_data.get("pomodoro_count")
-        # pomodoro_count = validated_data.pop("pomodoro_count")
-        task = Task.objects.create(**validated_data)
+        pomodoro_count = validated_data.pop("pomodoro_count")
+        project = self.context.get("project")
+        task = Task.objects.create(**validated_data, project=project)
         pomodoros = [Pomodoro(task=task) for _ in range(pomodoro_count)]
         Pomodoro.objects.bulk_create(pomodoros)
 

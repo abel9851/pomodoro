@@ -35,7 +35,7 @@ class ProjectListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        description="Project post",
+        description="Project Create",
         request=ProjectCreateRequestSerializer,
         responses={200: ProjectCreateSerializer},
         methods=["POST"],
@@ -70,6 +70,19 @@ class ProjectListView(APIView):
 class TaskListView(APIView):
     permission_classes = [IsAuthenticatedAndIsObjectOwner]
 
+    # 호출했을 때 가져올 데이터 형식은
+    # Task의 이름, pomodoro의 개수(Task에 정의되어 있음), updated된 날짜.
+    # Pomodoro의 length(분). 왜냐하면 포모도로 화면에서 Task에 붙어있는 시작 버튼을 누르면
+    # Pomodoro의 length를 가져와서 타이머를 돌리기 때문이다.
+    # 기존의 serializer를 활용하기. 활용하게 된다면 serializer의 이름에서 create를 삭제하기
+    def get(self, request, project_pk):
+        pass
+
+    @extend_schema(
+        description="Task Create",
+        request=TaskPomodoroCreateSerializer,
+        responses={200: TaskPomodoroCreateSerializer},
+    )
     def post(self, request, project_pk):
         # request.data를 serializer로 검증
         # 검증된 데이터로 Task 생성
@@ -85,7 +98,7 @@ class TaskListView(APIView):
         self.check_object_permissions(request, project)
 
         # TODO: projects와 tasks는 foreign key로 변경하기
-        serializer = TaskPomodoroCreateSerializer(data=request.data)
+        serializer = TaskPomodoroCreateSerializer(data=request.data, context={"project": project})
 
         # raise_exception은
         # validate를 통과하지 못할 시, 400 bad request를 응답한다.
@@ -96,23 +109,13 @@ class TaskListView(APIView):
         # 이 경우에는 어떻게 처리될까?
         # TypeError unexpected keyword arguments 'pomodoro_count'가 나온다.
         # 그러므로 pop을 해줘서 pomodoro_count는 별도로 취득한다.
-        # TODO: projects에 정의되어잇는 ManyToMany를 여기에 정의해서 처리하도록 한다.
 
         with transaction.atomic():
-            task = serializer.save()
-            project.tasks.add(task)
+            serializer.save()
 
-        # TODO: 생성된 Task과 Pomodoro의 데이터를 response에 받을 수 있도록 231126예정
-        # 해결
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # 호출했을 때 가져올 데이터 형식은
-    # Task의 이름, pomodoro의 개수(Task에 정의되어 있음), updated된 날짜.
-    # Pomodoro의 length(분). 왜냐하면 포모도로 화면에서 Task에 붙어있는 시작 버튼을 누르면
-    # Pomodoro의 length를 가져와서 타이머를 돌리기 때문이다.
-    # 기존의 serializer를 활용하기. 활용하게 된다면 serializer의 이름에서 create를 삭제하기
-    def get(self, request, project_pk):
-        pass
+
 
     # TODO: 231209부터 아래의 작업하기
     # Project모델 인스턴스을 가리키는 Task모델 인스턴스들을 get한다.
