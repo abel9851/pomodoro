@@ -11,6 +11,17 @@ class ProjectListSerializer(serializers.ModelSerializer):
         fields = ["name", "description", "color", "is_active"]
 
 
+class ProjectCreateRequestSerializer(serializers.ModelSerializer):
+    """
+    Project Request Create Model Serializer
+    only use for openapi request parameter
+    """
+
+    class Meta:
+        model = Project
+        fields = ["name", "description", "color"]
+
+
 class ProjectCreateSerializer(serializers.ModelSerializer):
     """Project Create Model Serializer"""
 

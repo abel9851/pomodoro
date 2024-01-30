@@ -9,7 +9,10 @@ from tasks.serializers import TaskPomodoroCreateSerializer, TaskDetailSerializer
 
 from .models import Project
 from tasks.models import Task
-from .serializers import ProjectCreateSerializer, ProjectListSerializer
+from .serializers import ProjectCreateSerializer, ProjectListSerializer, ProjectCreateRequestSerializer
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.types import OpenApiTypes
+
 
 # TODO: test 필요.
 # projects 모델 취득 - filter request.user의 id
@@ -17,11 +20,13 @@ from .serializers import ProjectCreateSerializer, ProjectListSerializer
 # ProjectListSerializer를 사용해서 직렬화
 # Response로 반환
 # 사용해야 할 것은, only 메소드
-
-
 class ProjectListView(APIView):
     """Project List View"""
 
+    @extend_schema(
+        description="Project List",
+        responses={200: ProjectListSerializer},
+    )
     def get(self, request):
         projects = Project.objects.filter(user=request.user.id).only(
             "name", "description", "color", "is_active"
@@ -29,6 +34,12 @@ class ProjectListView(APIView):
         serializer = ProjectListSerializer(projects, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        description="Project post",
+        request=ProjectCreateRequestSerializer,
+        responses={200: ProjectCreateSerializer},
+        methods=["POST"],
+    )
     def post(self, request):
         serializer = ProjectCreateSerializer(data=request.data)
 

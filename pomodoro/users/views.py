@@ -7,6 +7,7 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .serializers import UserLoginTokenObtainPairSerializer, UserLogoutSerializer
+from drf_spectacular.utils import extend_schema
 
 
 class UserApiLogin(APIView):
@@ -31,6 +32,12 @@ class UserApiLogin(APIView):
 
     """simple jwt를 사용해서 커스텀한 login view"""
 
+    @extend_schema(
+        description="User Login",
+        request=UserLoginTokenObtainPairSerializer,
+        # TODO: 240117 response바꾸기
+        responses={200: UserLoginTokenObtainPairSerializer},
+    )
     def post(self, request):
         serializer = UserLoginTokenObtainPairSerializer(data=request.data)
 
