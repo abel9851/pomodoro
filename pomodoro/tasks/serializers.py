@@ -2,10 +2,40 @@ from pomodoros.models import Pomodoro
 from pomodoros.serializers import PomodoroCreateSerializer
 from projects.serializers import ProjectBasicInfoSerializer
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_serializer, OpenApiExample
 
 from .models import Task
 
 
+@extend_schema_serializer(
+    exclude_fields=("id", "pomodoros"),
+    examples=[
+        OpenApiExample(
+            "full fields",
+            summary="Task create full fields Example",
+            description="Task create full fields Example, client can choose \
+                that using all fields or not",
+            value={
+                "name": "task name",
+                "priority": 1,
+                "due_date": "2021-12-12",
+                "pomodoro_count": 3,
+            },
+            request_only=True
+        ),
+        OpenApiExample(
+            "required fields",
+            summary="Task create required fields Example",
+            description="Task create use default value Example, client can choose \
+                that using required fields or all fields",
+            value={
+                "name": "task name",
+                "pomodoro_count": 3,
+            },
+            request_only=True
+        ),
+    ]
+)
 class TaskPomodoroCreateSerializer(serializers.ModelSerializer):
     """Task Create model Serializer"""
 
@@ -22,6 +52,7 @@ class TaskPomodoroCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ["id", "name", "priority", "due_date", "pomodoro_count", "pomodoros"]
+        # fields = ["id", "name", "pomodoro_count", "pomodoros"]
 
     def create(self, validated_data):
         pomodoro_count = validated_data.pop("pomodoro_count")

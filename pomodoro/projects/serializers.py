@@ -19,7 +19,7 @@ class ProjectCreateRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ["name", "description", "color"]
+        fields = ["name", "description", "color", "is_active"]
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
