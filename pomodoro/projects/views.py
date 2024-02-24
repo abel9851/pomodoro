@@ -80,6 +80,23 @@ class TaskListView(APIView):
 
     @extend_schema(
         description="Task Create",
+        parameters=[
+            OpenApiParameter(
+                name="project_pk",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.PATH,
+                description="project ID for which tasks are retireived",
+                required=True,
+                examples=[
+                    OpenApiExample(
+                        "Project ID",
+                        summary="Project ID Example",
+                        description="Project ID Example",
+                        value=1,
+                    ),
+                ],
+            ),
+        ],
         request=TaskPomodoroCreateSerializer,
         responses={200: TaskPomodoroCreateSerializer},
     )
