@@ -26,7 +26,7 @@ SECRET_KEY = env.str("SECRET_KEY", "+dpzlz)(d3rtcv4r#ki$^!&y*r2%^1*38+le1q!(@8mp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG")
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+ALLOWED_HOSTS = env.tuple("ALLOWED_HOSTS")
 
 
 # Application definition
