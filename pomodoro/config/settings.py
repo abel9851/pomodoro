@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 from pathlib import Path
 
@@ -177,6 +178,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),
     "TOKEN_OBTAIN_SERIALIZER": "users.serializers.UserLoginTokenObtainPairSerializer",
 }
 
