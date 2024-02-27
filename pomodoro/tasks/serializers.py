@@ -71,8 +71,15 @@ class TaskDetailSerializer(serializers.ModelSerializer):
     # 유저가 pomodoro_count부분을 누르면
     # task의 id를 사용해서 별도로 pomodoro list(pomodoro의 상세내용 포함)을 get하는 api를 사용할 것이므로
     # 여기에는 포함시키지 않는다.
-    projects = ProjectBasicInfoSerializer(read_only=True)
 
     class Meta:
         model = Task
-        fields = ["id", "due_date", "pomodoro_count", "projects"]
+        fields = ["id", "due_date", "pomodoro_count"]
+
+
+class TaskListSerializer(serializers.ModelSerializer):
+    "Task List Serializer"
+
+    class Meta:
+        model = Task
+        fields = ["id", "name", "priority", "pomodoro_count", "updated"]
