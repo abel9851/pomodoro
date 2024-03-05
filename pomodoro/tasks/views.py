@@ -3,11 +3,12 @@ from drf_spectacular.utils import extend_schema
 from tasks.serializers import TaskDetailSerializer
 from api.permissions import IsAuthenticatedAndIsObjectOwner
 from rest_framework.views import APIView
-from api_utils.common import get_model_instance_by_pk_or_not_found
-
+from api_utils.model_helpers import get_model_instance_by_pk_or_not_found
+from api_utils.exceptions import DeleteException
 from tasks.models import Task
 from rest_framework.response import Response
 from rest_framework import status
+from django.db import transaction
 
 
 # TODO: Task put(외래키관계인 pomodoro의 증감), delete, get
@@ -38,10 +39,22 @@ class TaskDetailView(APIView):
 
         # 해당 task를 직렬화
 
-    def put(self, request, project_pk, task_pk):
+    def put(self, request, task_pk):
         pass
 
-    def delete(self, request, project_pk, task_pk):
-        pass
+    @extend_schema(
+        description="Task Delete",
+        responses={204: "No Content"})
+    def delete(self, request, task_pk):
+        task = get_model_instance_by_pk_or_not_found(Task, task_pk)
+        try:
+            with transaction.atomic():
+                task.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except DeleteException as e:
+
+            return Response(data=e.detail, status=e.status_code)
+
+
 
 # TODO: pomodoro 하나하나 get, put, delete - 나중에 구현되는 것들.
