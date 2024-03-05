@@ -1,6 +1,5 @@
 from pomodoros.models import Pomodoro
 from pomodoros.serializers import PomodoroCreateSerializer
-from projects.serializers import ProjectBasicInfoSerializer
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_serializer, OpenApiExample
 
