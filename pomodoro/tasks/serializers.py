@@ -1,6 +1,5 @@
 from pomodoros.models import Pomodoro
 from pomodoros.serializers import PomodoroCreateSerializer
-from projects.serializers import ProjectBasicInfoSerializer
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_serializer, OpenApiExample
 
@@ -78,8 +77,16 @@ class TaskDetailSerializer(serializers.ModelSerializer):
 
 
 class TaskListSerializer(serializers.ModelSerializer):
-    "Task List Serializer"
+    """Task List Serializer"""
 
     class Meta:
         model = Task
         fields = ["id", "name", "priority", "pomodoro_count", "updated"]
+
+
+class TaskUpdateSerializer(serializers.ModelSerializer):
+    """Task Update Serializer"""
+
+    class Meta:
+        model = Task
+        fields = ["id", "name", "priority", "due_date", "pomodoro_count"]

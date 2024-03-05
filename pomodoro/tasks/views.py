@@ -1,6 +1,6 @@
 
 from drf_spectacular.utils import extend_schema
-from tasks.serializers import TaskDetailSerializer
+from tasks.serializers import TaskDetailSerializer, TaskUpdateSerializer
 from api.permissions import IsAuthenticatedAndIsObjectOwner
 from rest_framework.views import APIView
 from api_utils.model_helpers import get_model_instance_by_pk_or_not_found
@@ -39,8 +39,17 @@ class TaskDetailView(APIView):
 
         # 해당 task를 직렬화
 
+    @extend_schema(
+        description="Task Update",
+        request=TaskUpdateSerializer,
+        responses={200: TaskUpdateSerializer}
+    )
     def put(self, request, task_pk):
-        pass
+        task = get_model_instance_by_pk_or_not_found(Task, task_pk)
+        serializer = TaskUpdateSerializer(task, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
         description="Task Delete",
@@ -54,7 +63,5 @@ class TaskDetailView(APIView):
         except DeleteException as e:
 
             return Response(data=e.detail, status=e.status_code)
-
-
 
 # TODO: pomodoro 하나하나 get, put, delete - 나중에 구현되는 것들.
