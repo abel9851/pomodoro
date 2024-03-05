@@ -1,5 +1,5 @@
 from api.permissions import IsAuthenticatedAndIsObjectOwner
-from api_utils.common import get_model_instance_by_pk_or_not_found
+from api_utils.model_helpers import get_model_instance_by_pk_or_not_found
 from django.db import transaction
 from rest_framework import status
 from rest_framework.generics import ListAPIView
