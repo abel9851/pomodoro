@@ -64,6 +64,4 @@ class TaskDetailView(APIView):
 
             return Response(data=e.detail, status=e.status_code)
 
-
-
 # TODO: pomodoro 하나하나 get, put, delete - 나중에 구현되는 것들.
