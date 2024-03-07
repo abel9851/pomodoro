@@ -2,14 +2,14 @@ from api.permissions import IsAuthenticatedAndIsObjectOwner
 from api_utils.model_helpers import get_model_instance_by_pk_or_not_found
 from django.db import transaction
 from rest_framework import status
-from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from tasks.serializers import TaskPomodoroCreateSerializer, TaskListSerializer
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
 from .models import Project
 from tasks.models import Task
-from .serializers import ProjectCreateSerializer, ProjectListSerializer
+from .serializers import ProjectListSerializer
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
 
@@ -36,12 +36,12 @@ class ProjectListView(APIView):
 
     @extend_schema(
         description="Project Create",
-        request=ProjectCreateSerializer,
-        responses={200: ProjectCreateSerializer},
+        request=ProjectListSerializer,
+        responses={200: ProjectListSerializer},
         methods=["POST"],
     )
     def post(self, request):
-        serializer = ProjectCreateSerializer(data=request.data)
+        serializer = ProjectListSerializer(data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -66,6 +66,14 @@ class ProjectListView(APIView):
 # merge이전, 12/11이전 코드로 테스트 해보자.
 # 테스트 완료. DRF가 제공하는 browsable api문제였다.
 
+# TODO: 240306에 Project detail view 만들기
+# class ProjectDetialView(RetrieveUpdateDestroyAPIView):
+#     queryset = Project.objects.all()
+#     serializer_class = P
+
+
+
+    
 
 class TaskListView(APIView):
     permission_classes = [IsAuthenticatedAndIsObjectOwner]
