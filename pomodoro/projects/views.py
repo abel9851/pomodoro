@@ -9,7 +9,7 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
 from .models import Project
 from tasks.models import Task
-from .serializers import ProjectListSerializer
+from .serializers import ProjectListSerializer, ProjectDetailSerializer
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
 
@@ -67,13 +67,11 @@ class ProjectListView(APIView):
 # 테스트 완료. DRF가 제공하는 browsable api문제였다.
 
 # TODO: 240306에 Project detail view 만들기
-# class ProjectDetialView(RetrieveUpdateDestroyAPIView):
-#     queryset = Project.objects.all()
-#     serializer_class = P
+class ProjectDetailView(RetrieveUpdateDestroyAPIView):
+    lookup_url_kwarg = "project_pk"
+    queryset = Project.objects.all()
+    serializer_class = ProjectDetailSerializer
 
-
-
-    
 
 class TaskListView(APIView):
     permission_classes = [IsAuthenticatedAndIsObjectOwner]
