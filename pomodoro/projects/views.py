@@ -28,9 +28,11 @@ class ProjectListView(APIView):
         responses={200: ProjectListSerializer},
     )
     def get(self, request):
-        projects = Project.objects.filter(user=request.user.id).only(
-            "name", "description", "color", "is_active"
-        )
+        # front에서 로그인 정보를 줘야하네?
+        # projects = Project.objects.filter(user=request.user.id).only(
+        #     "name", "description", "color", "is_active"
+        # )
+        projects = Project.objects.only("name", "description", "color", "is_active")
         serializer = ProjectListSerializer(projects, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -66,6 +68,7 @@ class ProjectListView(APIView):
 # merge이전, 12/11이전 코드로 테스트 해보자.
 # 테스트 완료. DRF가 제공하는 browsable api문제였다.
 
+
 # TODO: 240306에 Project detail view 만들기
 class ProjectDetailView(RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = "project_pk"
@@ -83,7 +86,8 @@ class TaskListView(APIView):
     # 기존의 serializer를 활용하기. 활용하게 된다면 serializer의 이름에서 create를 삭제하기
     @extend_schema(
         description="Task List",
-        responses={200: TaskListSerializer},)
+        responses={200: TaskListSerializer},
+    )
     def get(self, request, project_pk):
         tasks = Task.objects.filter(project=project_pk)
         serializer = TaskListSerializer(tasks, many=True)
@@ -127,7 +131,9 @@ class TaskListView(APIView):
         self.check_object_permissions(request, project)
 
         # TODO: projects와 tasks는 foreign key로 변경하기
-        serializer = TaskPomodoroCreateSerializer(data=request.data, context={"project": project})
+        serializer = TaskPomodoroCreateSerializer(
+            data=request.data, context={"project": project}
+        )
 
         # raise_exception은
         # validate를 통과하지 못할 시, 400 bad request를 응답한다.

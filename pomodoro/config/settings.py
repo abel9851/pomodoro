@@ -56,6 +56,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "rest_framework_simplejwt.token_blacklist",
     "debug_toolbar",
+    "corsheaders",
     "drf_spectacular",
 ]
 
@@ -65,6 +66,7 @@ INSTALLED_APPS = SYSTEM_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -72,6 +74,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
+
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
 ROOT_URLCONF = "config.urls"
 
@@ -171,10 +175,10 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'pomoodoro API',
-    'DESCRIPTION': 'pomodoro api server',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "pomoodoro API",
+    "DESCRIPTION": "pomodoro api server",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 SIMPLE_JWT = {
