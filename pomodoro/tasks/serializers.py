@@ -20,7 +20,7 @@ from .models import Task
                 "due_date": "2021-12-12",
                 "pomodoro_count": 3,
             },
-            request_only=True
+            request_only=True,
         ),
         OpenApiExample(
             "required fields",
@@ -31,9 +31,9 @@ from .models import Task
                 "name": "task name",
                 "pomodoro_count": 3,
             },
-            request_only=True
+            request_only=True,
         ),
-    ]
+    ],
 )
 class TaskPomodoroCreateSerializer(serializers.ModelSerializer):
     """Task Create model Serializer"""
@@ -65,7 +65,7 @@ class TaskPomodoroCreateSerializer(serializers.ModelSerializer):
 
 class TaskDetailSerializer(serializers.ModelSerializer):
     """Task Detail Serializer"""
-    
+
     # pomodoro는 task detail을 get한 뒤.
     # 유저가 pomodoro_count부분을 누르면
     # task의 id를 사용해서 별도로 pomodoro list(pomodoro의 상세내용 포함)을 get하는 api를 사용할 것이므로

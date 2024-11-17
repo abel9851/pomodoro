@@ -1,14 +1,20 @@
-
 from drf_spectacular.utils import extend_schema
 from tasks.serializers import TaskDetailSerializer, TaskUpdateSerializer
 from api.permissions import IsAuthenticatedAndIsObjectOwner
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from api_utils.model_helpers import get_model_instance_by_pk_or_not_found
 from api_utils.exceptions import DeleteException
 from tasks.models import Task
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
+from .serializers import TaskListSerializer
+
+
+class TaskListView(ListAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskListSerializer
 
 
 # TODO: Task put(외래키관계인 pomodoro의 증감), delete, get
@@ -27,7 +33,8 @@ class TaskDetailView(APIView):
 
     @extend_schema(
         description="Task Detail",
-        responses={200: TaskDetailSerializer},)
+        responses={200: TaskDetailSerializer},
+    )
     def get(self, request, task_pk):
         # 해당 task를 소유한 유저인지 확인
         task = get_model_instance_by_pk_or_not_found(Task, task_pk)
@@ -42,7 +49,7 @@ class TaskDetailView(APIView):
     @extend_schema(
         description="Task Update",
         request=TaskUpdateSerializer,
-        responses={200: TaskUpdateSerializer}
+        responses={200: TaskUpdateSerializer},
     )
     def put(self, request, task_pk):
         task = get_model_instance_by_pk_or_not_found(Task, task_pk)
@@ -51,9 +58,7 @@ class TaskDetailView(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @extend_schema(
-        description="Task Delete",
-        responses={204: "No Content"})
+    @extend_schema(description="Task Delete", responses={204: "No Content"})
     def delete(self, request, task_pk):
         task = get_model_instance_by_pk_or_not_found(Task, task_pk)
         try:
@@ -63,5 +68,6 @@ class TaskDetailView(APIView):
         except DeleteException as e:
 
             return Response(data=e.detail, status=e.status_code)
+
 
 # TODO: pomodoro 하나하나 get, put, delete - 나중에 구현되는 것들.
