@@ -28,7 +28,6 @@ class ProjectListView(APIView):
         responses={200: ProjectListSerializer},
     )
     def get(self, request):
-        # front에서 로그인 정보를 줘야하네?
         # projects = Project.objects.filter(user=request.user.id).only(
         #     "name", "description", "color", "is_active"
         # )
