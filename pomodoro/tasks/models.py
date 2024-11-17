@@ -28,7 +28,8 @@ class Task(core_models.TimeStampedModel):
         "projects.Project",
         verbose_name="related project",
         related_name="tasks",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
     )
     due_date = models.DateField(verbose_name="task due date", default=date.today)
     # integerfield에서는 max_length가 무시된다. Min or MaxValueValidator를 사용하던가
